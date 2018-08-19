@@ -1,0 +1,36 @@
+$telegram = new Telegram('YOUR TELEGRAM TOKEN HERE');
+
+$chat_id = $telegram->ChatID();
+$content = array('chat_id' => $chat_id, 'text' => 'Test');
+$telegram->sendMessage($content);
+
+$telegram = new Telegram('YOUR TELEGRAM TOKEN HERE');
+
+$result = $telegram->getData();
+$text = $result['message'] ['text'];
+$chat_id = $result['message'] ['chat']['id'];
+$content = array('chat_id' => $chat_id, 'text' => 'Test');
+$telegram->sendMessage($content);
+// Load a local file to upload. If is already on Telegram's Servers just pass the resource id
+$img = curl_file_create('test.png','image/png'); 
+$content = array('chat_id' => $chat_id, 'photo' => $img );
+$telegram->sendPhoto($content);
+$file = $telegram->getFile($file_id);
+$telegram->downloadFile($file['result']['file_path'], './my_downloaded_file_on_local_server.png');
+$telegram = new Telegram('YOUR TELEGRAM TOKEN HERE');
+
+$req = $telegram->getUpdates();
+
+for ($i = 0; $i < $telegram-> UpdateCount(); $i++) {
+	// You NEED to call serveUpdate before accessing the values of message in Telegram Class
+	$telegram->serveUpdate($i);
+	$text = $telegram->Text();
+	$chat_id = $telegram->ChatID();
+
+	if ($text == '/start') {
+		$reply = 'Working';
+		$content = array('chat_id' => $chat_id, 'text' => $reply);
+		$telegram->sendMessage($content);
+	}
+	// DO OTHER STUFF
+}
